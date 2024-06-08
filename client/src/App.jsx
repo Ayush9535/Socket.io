@@ -6,7 +6,7 @@ import { io } from "socket.io-client"
 import { useEffect, useState } from "react"
 
 function App() {
-  const socket = io("http://localhost:3000")
+  const socket = io("https://socket-io-e3s4.onrender.com")
 
   useEffect(() => {
     socket.on("connect", () => {
