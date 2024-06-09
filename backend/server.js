@@ -12,7 +12,7 @@ const io = new Server(server , {
         methods: ["GET", "POST"]
     }
 })
-const __dirname = path.resolve()
+// const __dirname = path.resolve()
 app.use(express.static(path.join(__dirname, "/client/dist")))
 app.get("*" , (req, res) => {
     res.sendFile(path.join(__dirname, "client" , "dist" , "index.html"))
