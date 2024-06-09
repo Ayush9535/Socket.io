@@ -6,9 +6,15 @@ import { io } from "socket.io-client"
 import { useEffect, useState } from "react"
 
 function App() {
-  const socket = io("https://socket-io-e3s4.onrender.com")
-
+  
+  const [socketState, setSocketState] = useState(null)
+  
   useEffect(() => {
+    const socket = io("https://socket-io-e3s4.onrender.com")
+    // const socket = io("http://localhost:3000")
+    
+    setSocketState(socket)
+
     socket.on("connect", () => {
       console.log("Connected to server")
     })
@@ -18,11 +24,12 @@ function App() {
     }
   },[])
   
+  
   return (
     <>
       <Routes>
-        <Route path="/" element={<Login socket={socket}/>} />
-        <Route path="/chat" element={<ChatUi socket={socket}/>} />
+        <Route path="/" element={<Login socket={socketState}/>} />
+        <Route path="/chat" element={<ChatUi socket={socketState}/>} />
       </Routes>
     </>
   )

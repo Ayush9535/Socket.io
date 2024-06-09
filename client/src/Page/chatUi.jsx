@@ -2,6 +2,8 @@ import React from 'react'
 import { useEffect, useState , useRef} from "react"
 import { useLocation } from 'react-router-dom'
 import "./ChatUI.css"
+import { io } from "socket.io-client"
+
 
 const chatUi = ({socket}) => {
 
@@ -25,20 +27,29 @@ const chatUi = ({socket}) => {
     const [roomCount, setRoomCount] = useState(0);
     const { room, name } = location.state || {}
 
+    // const socket = io("http://localhost:3000")
+
     useEffect(() => {
-        socket.on("user-msg", (msg) => {
-            setMessages((messages)=>[...messages, {txt:msg.msg , sender:"user2", name:msg.name}])
-        })
+      // socket.on("connect", () => {
+      //   console.log("Connected to server")
+      // })
 
-        socket.on("Servermessage", (msg) => {
-            setMessages((messages)=>[...messages, {txt:msg , sender:"server" , name:""}])
-        })
+      socket.on("user-msg", (msg) => {
+          setMessages((messages)=>[...messages, {txt:msg.msg , sender:"user2", name:msg.name}])
+      })
 
-        socket.on('roomCount', handleRoomCount);
+      socket.on("Servermessage", (msg) => {
+          setMessages((messages)=>[...messages, {txt:msg , sender:"server" , name:""}])
+      })
 
-        return () => {
-            socket.disconnect()
-        }
+      socket.on('roomCount', handleRoomCount);
+
+      return () => {
+        socket.off("user-msg");
+        socket.off("Servermessage");
+        socket.off("roomCount");
+        socket.emit("leaveRoom", { name, room });
+      }
     }, [])
 
     const handleRoomCount = (count) => {
