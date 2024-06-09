@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const {Server} = require("socket.io") 
 const http = require("http")
+const path = require("path")
 
 const app = express()
 const server = http.createServer(app)
@@ -10,6 +11,11 @@ const io = new Server(server , {
         origin: "*",
         methods: ["GET", "POST"]
     }
+})
+const __dirname = path.resolve()
+app.use(express.static(path.join(__dirname, "/client/dist")))
+app.get("*" , (req, res) => {
+    res.sendFile(path.join(__dirname, "client" , "dist" , "index.html"))
 })
 
 const port = 3000
