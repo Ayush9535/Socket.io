@@ -44,7 +44,7 @@ const ChatInterface = () => {
 
     useEffect(() => {
         try {
-            axios.get(`http://localhost:3000/getConversations/${localStorage.getItem('id')}`)
+            axios.get(`https://socket-io-e3s4.onrender.com/getConversations/${localStorage.getItem('id')}`)
                 .then((res) => {
                     setUsers(res.data);
                 })
@@ -80,7 +80,7 @@ const ChatInterface = () => {
         setSelectedUser(user);
         localStorage.setItem("selectedUser", user);
         setLoading(true);
-        axios.get(`http://localhost:3000/getMessages/${localStorage.getItem("id")}/${user}`)
+        axios.get(`https://socket-io-e3s4.onrender.com/getMessages/${localStorage.getItem("id")}/${user}`)
             .then((res) => {
                 setMessages(res.data);
             })
@@ -96,7 +96,7 @@ const ChatInterface = () => {
 
     const handleSendMessage = () => {
         if (message.trim() === '') return;
-        axios.post(`http://localhost:3000/send/${selectedUser}`, { message, senderId: localStorage.getItem("id") })
+        axios.post(`https://socket-io-e3s4.onrender.com/send/${selectedUser}`, { message, senderId: localStorage.getItem("id") })
             .then((res) => {
                 setMessage('');
                 console.log(res.data);
