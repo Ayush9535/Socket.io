@@ -45,7 +45,7 @@ const RegisterForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-        axios.post('http://localhost:3000/register', {username , email, password})
+        axios.post('https://socket-io-e3s4.onrender.com/register', {username , email, password})
           .then((res)=>{
             console.log(res.data)
             navigate('/');
