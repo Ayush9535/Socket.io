@@ -32,7 +32,7 @@ const LoginForm = () => {
     e.preventDefault();
     
     if (validateForm()) {
-        axios.post('https://socket-io-e3s4.onrender.com/login', {username , password})
+        axios.post('https://socket-io-e3s4.onrender.com/login', {username.trim() , password.trim()})
           .then((res)=>{
             toast.success('Login Successful' , {duration: 1000})
             console.log(res.data)
