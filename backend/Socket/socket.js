@@ -20,30 +20,18 @@ io.on("connection", (socket) => {
 
     userSocketID[userId] = socket.id;
 
+    io.emit("newUser", Object.keys(userSocketID))
+
     socket.on("message", (msg) => {
         const room = Array.from(socket.rooms)[1];
         socket.broadcast.to(room).emit("user-msg", {msg:msg , name:socket.username})
     })
 
-    socket.on("joinRoom", ({name, room}) => {
-        socket.join(room)
-        socket.username = name
-        socket.currentRoom = room;
-        // console.log(socket.id , "Joined" , room)
-        socket.broadcast.to(room).emit("Servermessage", `${name} Joined`)
-        updateRoomCount(room);
+    socket.on("disconnect",() => {
+        delete userSocketID[userId];
+        socket.broadcast.emit("newUser", Object.keys(userSocketID))
     })
 
-    socket.on("leaveRoom", ({name, room}) => {
-        socket.leave(room)
-        socket.broadcast.to(room).emit("Servermessage", `${name} left the room`)
-        updateRoomCount(room);
-    })
-
-    function updateRoomCount(room) {
-        const roomCount = io.sockets.adapter.rooms.get(room)?.size || 0;
-        io.to(room).emit("roomCount", roomCount);
-    }
 })
 
 module.exports = { io , userSocketID , app , server}

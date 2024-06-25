@@ -10,7 +10,7 @@ const ChatInterface = () => {
     const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
-    const [online, setOnline] = useState(false);
+    const [onlineUsers, setOnlineUsers] = useState([]);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const messagesEndRef = useRef(null);
     const navigate = useNavigate();
@@ -28,8 +28,12 @@ const ChatInterface = () => {
     
         socket.on("connect", () => {
             console.log("Connected to server");
-            setOnline(true);
         });
+
+        socket.on("newUser" , (users) => {
+            console.log(users)
+            setOnlineUsers(users)
+        })
 
         socket.on("new-message", (msg) => {
             setMessages((prevMess) => [...prevMess, msg]);
@@ -37,14 +41,13 @@ const ChatInterface = () => {
 
         return () => {
             socket.disconnect();
-            setOnline(false);
             localStorage.setItem("selectedUser", null);
         };
     }, []);
 
     useEffect(() => {
         try {
-            axios.get(`http://localhost:3000/getConversations/${localStorage.getItem('id')}`)
+            axios.get(`https://socket-io-e3s4.onrender.com/getConversations/${localStorage.getItem('id')}`)
                 .then((res) => {
                     setUsers(res.data);
                 })
@@ -80,7 +83,7 @@ const ChatInterface = () => {
         setSelectedUser(user);
         localStorage.setItem("selectedUser", user);
         setLoading(true);
-        axios.get(`http://localhost:3000/getMessages/${localStorage.getItem("id")}/${user}`)
+        axios.get(`https://socket-io-e3s4.onrender.com/getMessages/${localStorage.getItem("id")}/${user}`)
             .then((res) => {
                 setMessages(res.data);
             })
@@ -96,7 +99,7 @@ const ChatInterface = () => {
 
     const handleSendMessage = () => {
         if (message.trim() === '') return;
-        axios.post(`http://localhost:3000/send/${selectedUser}`, { message, senderId: localStorage.getItem("id") })
+        axios.post(`https://socket-io-e3s4.onrender.com/send/${selectedUser}`, { message, senderId: localStorage.getItem("id") })
             .then((res) => {
                 setMessage('');
                 console.log(res.data);
@@ -131,6 +134,9 @@ const ChatInterface = () => {
                                         src={user.profile}
                                         alt=""
                                     />
+                                    {onlineUsers.includes(user._id) && (
+                                        <div className="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0" />
+                                    )}
                                 </div>
                                 <div className="flex-1 px-5">
                                     <div className="flex justify-between items-center">

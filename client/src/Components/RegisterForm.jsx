@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link , useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 const RegisterForm = () => {
   const [username, setUsername] = useState('');
@@ -47,13 +48,18 @@ const RegisterForm = () => {
     if (validateForm()) {
         axios.post('https://socket-io-e3s4.onrender.com/register', {username , email, password})
           .then((res)=>{
+            toast.success('Registration Successful' , {duration: 1000})
             console.log(res.data)
-            navigate('/');
+            setTimeout(()=>{
+              navigate('/');
+            },1200)
           })
           .catch((err)=>{
+            toast.error('Registration Failed')
             console.log(err)
           })
       } else {
+        toast.error('Form validation failed')
         console.log('Form validation failed');
       }
   };
@@ -132,6 +138,10 @@ const RegisterForm = () => {
           </Link>
         </p>
       </div>
+      <Toaster
+  position="top-center"
+  reverseOrder={true}
+/>
     </div>
   );
 };

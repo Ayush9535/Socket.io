@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -33,16 +34,21 @@ const LoginForm = () => {
     if (validateForm()) {
         axios.post('https://socket-io-e3s4.onrender.com/login', {username , password})
           .then((res)=>{
+            toast.success('Login Successful' , {duration: 1000})
             console.log(res.data)
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('id', res.data.id)
             sessionStorage.setItem('loggedin' , true)
-            navigate('/chatinterface');
+            setTimeout(()=>{
+              navigate('/chatinterface');
+            },1200)
           })
           .catch((err)=>{
+            toast.error('Login Failed')
             console.log(err)
           })
     } else {
+      toast.error('Form validation failed')
         console.log('Form validation failed');
     }
   };
@@ -95,6 +101,11 @@ const LoginForm = () => {
           </Link>
         </p>
       </div>
+
+      <Toaster
+  position="top-center"
+  reverseOrder={true}
+/>
     </div>
   );
 };
