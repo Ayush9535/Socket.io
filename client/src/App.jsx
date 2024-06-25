@@ -11,7 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
-        <Route path="/chatinterface" element={sessionStorage.getItem("loggedin") === "true" ? <ChatInterface /> : <Navigate to={"/"}/>} />
+        <Route path="/chatinterface" element={<ChatInterface />} />
       </Routes>
     </>
   )
