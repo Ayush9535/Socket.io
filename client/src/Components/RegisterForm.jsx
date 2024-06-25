@@ -46,7 +46,7 @@ const RegisterForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-        axios.post('https://socket-io-e3s4.onrender.com/register', {username , email, password})
+        axios.post('https://socket-io-e3s4.onrender.com/register', {username.trim() , email.trim() , password.trim()})
           .then((res)=>{
             toast.success('Registration Successful' , {duration: 1000})
             console.log(res.data)
