@@ -30,9 +30,12 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+    let data = {
+      username: username.trim(),
+      password: password.trim()
+    }
     if (validateForm()) {
-        axios.post('https://socket-io-e3s4.onrender.com/login', {username.trim() , password.trim()})
+        axios.post('https://socket-io-e3s4.onrender.com/login', data)
           .then((res)=>{
             toast.success('Login Successful' , {duration: 1000})
             console.log(res.data)
@@ -44,7 +47,7 @@ const LoginForm = () => {
             },1200)
           })
           .catch((err)=>{
-            toast.error('Login Failed')
+            toast.error(err.response.data.message)
             console.log(err)
           })
     } else {

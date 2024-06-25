@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link , useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
+import { MdPassword } from 'react-icons/md';
 
 const RegisterForm = () => {
   const [username, setUsername] = useState('');
@@ -45,8 +46,13 @@ const RegisterForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    let data = {
+      username: username.trim(),
+      email: email.trim(),
+      password: password.trim()
+    }
     if (validateForm()) {
-        axios.post('https://socket-io-e3s4.onrender.com/register', {username.trim() , email.trim() , password.trim()})
+        axios.post('https://socket-io-e3s4.onrender.com/register', data)
           .then((res)=>{
             toast.success('Registration Successful' , {duration: 1000})
             console.log(res.data)
@@ -55,7 +61,7 @@ const RegisterForm = () => {
             },1200)
           })
           .catch((err)=>{
-            toast.error('Registration Failed')
+            toast.error(err.response.data.message)
             console.log(err)
           })
       } else {
